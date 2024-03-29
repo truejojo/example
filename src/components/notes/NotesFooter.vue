@@ -4,10 +4,9 @@ const noteList = useNoteStore();
 </script>
 
 <template>
-    <div class="bg-dark text-light my-4 py-3 px-2 rounded">
-
+    <div class="bg-dark text-light my-3 py-3 px-2 rounded">
         <p class="text-uppercase text-center m-0">
-            Noch <span class="badge bg-info text-dark"> {{ noteList.maxNotes - noteList.notes.length }}</span> mögliche Notizen!
+            Noch <span class="badge bg-info text-dark"> {{ noteList.getRemainingNotes }}</span> mögliche Notizen!
         </p>
     </div>
 </template>

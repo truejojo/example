@@ -1,5 +1,5 @@
 <script setup>
-import { inject } from 'vue';
+import useNoteStore from '../../stores/notesStore.js';
 import Button from '../single/Button.vue';
 
 const { note } = defineProps({
@@ -9,12 +9,14 @@ const { note } = defineProps({
     }
 });
 const { title, text, date } = note;
+const noteList = useNoteStore();
 
-const handleUpdateNote = inject('handleUpdateNote');
-const deleteNote = inject('deleteNote');
+const handleUpdateNote = () => {
+    noteList.setCurrentNote(note);
+    noteList.setIsOverlay(true);
+}
 
-const sendHandleUpdateNote = () => handleUpdateNote(note);
-const sendDeleteNote = () => deleteNote(note);
+const deleteNote = () => noteList.deleteNote(note);
 </script>
 
 <template>
@@ -24,8 +26,8 @@ const sendDeleteNote = () => deleteNote(note);
             <p class="card-text">{{ text }}</p>
         </div>
         <div class="card-footer d-flex align-items-end">
-            <Button :onClick="sendHandleUpdateNote" class="btn-sm me-2">Ändern</Button>
-            <Button :onClick="sendDeleteNote" bgColor="btn-danger" class="btn-sm">Löschen</Button>    
+            <Button :onClick="handleUpdateNote" class="btn-sm me-2">Ändern</Button>
+            <Button :onClick="deleteNote" bgColor="btn-danger" class="btn-sm">Löschen</Button>    
             <span class="ms-auto badge bg-info text-dark">{{ date }}</span>
         </div>
     </div>

@@ -8,6 +8,6 @@
 .grid-wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    grid-gap: 20px;
+    grid-gap: 16px;
 }
 </style>

@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue';
+import useNoteStore from '../../stores/notesStore.js';
 import Label from '../../components/single/Label.vue';
 import InputTextField from '../../components/single/InputTextField.vue';
 import TextareaField from '../../components/single/TextareaField.vue';
@@ -7,43 +8,38 @@ import Button from '../../components/single/Button.vue';
 import ErrorMessage from '../../components/single/ErrorMessage.vue';
 import FlexJustifyBetween from '../../wrapper/FlexJustifyBetween.vue';
 
-const { noteUpdateValues } = defineProps({
-    noteUpdateValues: {
-        type: Object,
-        default: null,
-    }
-})
+const noteList = useNoteStore();
 
-const title = ref( noteUpdateValues ? noteUpdateValues.title : '');
-const text = ref( noteUpdateValues ? noteUpdateValues.text : '');
+const title = ref( noteList.currentNote ? noteList.currentNote.title : '');
+const text = ref( noteList.currentNote ? noteList.currentNote.text : '');
 const titleErrorMessage = ref('');
 const textErrorMessage = ref('');
 
-const emit = defineEmits(['addNote', 'cancelNewNote', 'updateNote']);
 
-const emitAddNote = () => {
-    titleErrorMessage.value = '';
-    textErrorMessage.value = '';
-    if(title.value === '') return titleErrorMessage.value = "Bitte einen Titel eingeben!";
-    if(text.value === '') return textErrorMessage.value = "Bitte einen Text eingeben!";
-   
-    emit('addNote', { title: title.value, text: text.value });
-};
-
-const emitCancelNewNote = () => {
-    title.value = '';
-    text.value = '';
-
-    emit('cancelNewNote');
-};
-
-const emitUpdateNote = () => {
+const addNote = () => {
     titleErrorMessage.value = '';
     textErrorMessage.value = '';
     if(title.value === '') return titleErrorMessage.value = "Bitte einen Titel eingeben!";
     if(text.value === '') return textErrorMessage.value = "Bitte einen Text eingeben!";
 
-    emit('updateNote', { title: title.value, text: text.value })
+    noteList.addNote({ title: title.value, text: text.value });
+    noteList.setIsOverlay(false);
+};
+
+const cancelNewNote = () => {
+    noteList.setCurrentNote(null);
+    noteList.setIsOverlay(false);
+};
+
+const updateNote = () => {
+    titleErrorMessage.value = '';
+    textErrorMessage.value = '';
+    if(title.value === '') return titleErrorMessage.value = "Bitte einen Titel eingeben!";
+    if(text.value === '') return textErrorMessage.value = "Bitte einen Text eingeben!";
+
+    noteList.updateNote({ title: title.value, text: text.value });
+    noteList.setCurrentNote(null);
+    noteList.setIsOverlay(false);
 };
 </script>
 
@@ -59,9 +55,9 @@ const emitUpdateNote = () => {
         <ErrorMessage v-if="textErrorMessage">{{ textErrorMessage }}</ErrorMessage>
     </div>
     <FlexJustifyBetween>
-        <Button :onClick="noteUpdateValues ? emitUpdateNote : emitAddNote">
-            {{ noteUpdateValues ? 'Notiz ändern' : 'Neue Notiz' }}
+        <Button :onClick="noteList.currentNote ? updateNote : addNote">
+            {{ noteList.currentNote ? 'Notiz ändern' : 'Neue Notiz' }}
         </Button>
-        <Button :onClick="emitCancelNewNote" bgColor="btn-secondary">Abbrechen</Button>
+        <Button :onClick="cancelNewNote" bgColor="btn-secondary">Abbrechen</Button>
     </FlexJustifyBetween>
 </template>

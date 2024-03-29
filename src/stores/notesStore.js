@@ -9,7 +9,9 @@ const useNotesStore = defineStore('noteList', {
     state: () => ({
         name: '',
         maxNotes: 0,
-        notes: []
+        notes: [], 
+        isOverlay: false,
+        currentNote: null,
     }),
 
     actions: {
@@ -34,16 +36,30 @@ const useNotesStore = defineStore('noteList', {
             this.$state.notes = this.$state.notes.filter(note => note.id !== noteToDelete.id);
         },
 
-        updateNote ({ title, text }, noteUpdateValues) {
+        updateNote ({ title, text }) {
             const newNoteValues = { 
-                ...noteUpdateValues.value, 
+                ...this.$state.currentNote, 
                 changeTS: getTimestampFull(),
                 title,
                 text,
             };
-            this.$state.notes = [newNoteValues, ...this.$state.notes.filter(note => note.id !== noteUpdateValues.value.id)];
+            this.$state.notes = [newNoteValues, ...this.$state.notes.filter(note => note.id !== this.$state.currentNote.id)];
+        },
+
+        setCurrentNote(newNote) {
+            this.$state.currentNote = newNote;
+        },
+
+        setIsOverlay(value) {
+            this.$state.isOverlay = value;
+        },
+    },
+    
+    getters: {
+        getRemainingNotes() {
+            return this.$state.maxNotes - this.$state.notes.length;
         },
     }
-});
+    });
 
 export default useNotesStore;
