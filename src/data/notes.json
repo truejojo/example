@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "title": "Joggen gehen",
+        "text": "Lorem, ipsum dolor sit amet consectetur adipisicing elit.",
+        "date": "20.03.2024",
+        "createTS": "20240320160000"
+    },
+    {
+        "id": 2,
+        "title": "Programmieren üben",
+        "text": "Eaque deserunt nam facere veniam cumque quisquam",
+        "date": "20.03.2024",
+        "createTS": "20240320163000"
+    }
+]
