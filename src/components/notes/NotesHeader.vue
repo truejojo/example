@@ -1,17 +1,9 @@
 <script setup>
-import FlexJustifyBetween from '../../wrapper/FlexJustifyBetween.vue';
-
-const { noteList } = defineProps({
-    noteList: {
-        type: Object,
-        required: true
-    }
-})
+import useNoteStore from '../../stores/notesStore.js';
+const noteList = useNoteStore();
 
 const emit = defineEmits(['openOverlay'])
-const emitOpenOverlay = () => emit('openOverlay');
-
- 
+const emitOpenOverlay = () => emit('openOverlay'); 
 </script>
 
 <template>

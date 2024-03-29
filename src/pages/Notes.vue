@@ -1,64 +1,42 @@
 <script setup>
 import { ref, provide } from 'vue';
-// Components
+import useNoteStore from '../stores/notesStore.js';
 import NotesHeader from '../components/notes/NotesHeader.vue';
 import NotesMain from '../components/notes/NotesMain.vue';
 import NotesFooter from '../components/notes/NotesFooter.vue';
 import NoteForm from '../components/notes/NoteForm.vue';
-// Wrapper
-
 import Overlay from '../components/utils/Overlay.vue';
-// Composables
 import useToggler from '../composables/useToggler.js';
-import useDate from '../composables/useDate.js';
-import useRandomCharacter from '../composables/useRandomCharacter.js';
-import jsonNotes from '../data/notes.json';
+
+const noteList = useNoteStore();
+noteList.seed();
 
 const [ getIsOverlay, , setIsOverlayTrue, setIsOverlayFalse ] = useToggler();
-const { getTimestampDate, getTimestampFull, getShortDate } = useDate();
-const { getNumbersIdent } = useRandomCharacter();
 
-const noteList = ref(jsonNotes);
-const noteToChange = ref(null);
+const noteUpdateValues = ref(null);
 
-const addNote = ({ title, text }) => {
-    noteList.value.notes.push({
-        id: getNumbersIdent(),
-        date: getShortDate(),
-        dateTS: getTimestampDate(),
-        createTS: getTimestampFull(),
-        changeTS: null,
-        title,
-        text,
-    });
+const addNote = (note) => {
+    noteList.addNote(note);
     setIsOverlayFalse();
 };
 
-const updateNote = ({ title, text }) => {
-    const updateNote = { 
-        ...noteToChange.value, 
-        changeTS: getTimestampFull(),
-        title,
-        text,
-    };
-    noteList.value.notes = [updateNote, ...noteList.value.notes.filter(note => note.id !== noteToChange.value.id)];
-    
-    noteToChange.value = null;
+const deleteNote = (noteToDelete) => noteList.deleteNote(noteToDelete);
+
+const updateNote = (noteToUpdate) => {
+    noteList.updateNote(noteToUpdate, noteUpdateValues);
+    noteUpdateValues.value = null;
     setIsOverlayFalse();
 };
 
 const cancelNewNote = () => {
     setIsOverlayFalse();
-    noteToChange.value = null;
+    noteUpdateValues.value = null;
 };
 
 const handleUpdateNote = (note) => {
-    noteToChange.value = note;
+    noteUpdateValues.value = note;
     setIsOverlayTrue();
 };
-
-const deleteNote = (noteToDelete) =>
-    noteList.value.notes = noteList.value.notes.filter(note => note.id !== noteToDelete.id);
 
 const openOverlay = () => setIsOverlayTrue();
 
@@ -72,14 +50,14 @@ provide('deleteNote', deleteNote);
             @addNote="addNote"
             @cancelNewNote="cancelNewNote"
             @updateNote="updateNote"
-            :noteToChange="noteToChange"
+            :noteUpdateValues="noteUpdateValues"
         />
     </Overlay>
 
-    <NotesHeader :noteList="noteList" @openOverlay="openOverlay"/>
+    <NotesHeader @openOverlay="openOverlay"/>
 
-    <NotesMain :noteList="noteList" />
+    <NotesMain />
 
-    <NotesFooter :noteList="noteList" />
+    <NotesFooter />
 
 </template>

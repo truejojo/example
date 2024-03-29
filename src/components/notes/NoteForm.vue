@@ -7,15 +7,15 @@ import Button from '../../components/single/Button.vue';
 import ErrorMessage from '../../components/single/ErrorMessage.vue';
 import FlexJustifyBetween from '../../wrapper/FlexJustifyBetween.vue';
 
-const { noteToChange } = defineProps({
-    noteToChange: {
+const { noteUpdateValues } = defineProps({
+    noteUpdateValues: {
         type: Object,
         default: null,
     }
 })
 
-const title = ref( noteToChange ? noteToChange.title : '');
-const text = ref( noteToChange ? noteToChange.text : '');
+const title = ref( noteUpdateValues ? noteUpdateValues.title : '');
+const text = ref( noteUpdateValues ? noteUpdateValues.text : '');
 const titleErrorMessage = ref('');
 const textErrorMessage = ref('');
 
@@ -59,8 +59,8 @@ const emitUpdateNote = () => {
         <ErrorMessage v-if="textErrorMessage">{{ textErrorMessage }}</ErrorMessage>
     </div>
     <FlexJustifyBetween>
-        <Button :onClick="noteToChange ? emitUpdateNote : emitAddNote">
-            {{ noteToChange ? 'Notiz ändern' : 'Neue Notiz' }}
+        <Button :onClick="noteUpdateValues ? emitUpdateNote : emitAddNote">
+            {{ noteUpdateValues ? 'Notiz ändern' : 'Neue Notiz' }}
         </Button>
         <Button :onClick="emitCancelNewNote" bgColor="btn-secondary">Abbrechen</Button>
     </FlexJustifyBetween>

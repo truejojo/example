@@ -1,16 +1,12 @@
 <script setup>
-import GridWrapper from '../../wrapper/GridWrapper.vue';
+import useNoteStore from '../../stores/notesStore.js';
 import Note from './Note.vue';
-import useDate from '../../composables/useDate';
+import GridWrapper from '../../wrapper/GridWrapper.vue';
+import useDate from '../../composables/useDate.js';
 
 const { getTimestampFull } = useDate();
 
-const { noteList } = defineProps({
-    noteList: {
-        type: Object,
-        required: true
-    }
-});
+const noteList = useNoteStore();
 </script>
 
 <template>
