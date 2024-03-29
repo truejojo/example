@@ -1,4 +1,5 @@
 <script setup>
+import { inject } from 'vue';
 import Button from '../single/Button.vue';
 
 const { note } = defineProps({
@@ -9,10 +10,11 @@ const { note } = defineProps({
 });
 const { title, text, date } = note;
 
-const emit = defineEmits(['handleUpdateNote', 'deleteNote'])
+const handleUpdateNote = inject('handleUpdateNote');
+const deleteNote = inject('deleteNote');
 
-const emitHandleUpdateNote = () => emit('handleUpdateNote', note);
-const emitDeleteNote = () => emit('deleteNote', note);
+const sendHandleUpdateNote = () => handleUpdateNote(note);
+const sendDeleteNote = () => deleteNote(note);
 </script>
 
 <template>
@@ -22,8 +24,8 @@ const emitDeleteNote = () => emit('deleteNote', note);
             <p class="card-text">{{ text }}</p>
         </div>
         <div class="card-footer d-flex align-items-end">
-            <Button :onClick="emitHandleUpdateNote" class="btn-sm me-2">Ändern</Button>
-            <Button :onClick="emitDeleteNote" bgColor="btn-danger" class="btn-sm">Löschen</Button>    
+            <Button :onClick="sendHandleUpdateNote" class="btn-sm me-2">Ändern</Button>
+            <Button :onClick="sendDeleteNote" bgColor="btn-danger" class="btn-sm">Löschen</Button>    
             <span class="ms-auto badge bg-info text-dark">{{ date }}</span>
         </div>
     </div>

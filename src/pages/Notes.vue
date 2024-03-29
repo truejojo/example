@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, provide } from 'vue';
 // Components
-import Note from '../components/composed/Note.vue';
-import NoteForm from '../components/composed/NoteForm.vue';
+import NotesHeader from '../components/notes/NotesHeader.vue';
+import NotesMain from '../components/notes/NotesMain.vue';
+import NotesFooter from '../components/notes/NotesFooter.vue';
+import NoteForm from '../components/notes/NoteForm.vue';
 // Wrapper
-import GridWrapper from '../wrapper/GridWrapper.vue';
-import FlexJustifyBetween from '../wrapper/FlexJustifyBetween.vue';
+
 import Overlay from '../components/utils/Overlay.vue';
 // Composables
 import useToggler from '../composables/useToggler.js';
@@ -17,11 +18,11 @@ const [ getIsOverlay, , setIsOverlayTrue, setIsOverlayFalse ] = useToggler();
 const { getTimestampDate, getTimestampFull, getShortDate } = useDate();
 const { getNumbersIdent } = useRandomCharacter();
 
-const notes = ref(jsonNotes.length > 0 ? jsonNotes : []);
+const noteList = ref(jsonNotes);
 const noteToChange = ref(null);
 
 const addNote = ({ title, text }) => {
-    notes.value.push({
+    noteList.value.notes.push({
         id: getNumbersIdent(),
         date: getShortDate(),
         dateTS: getTimestampDate(),
@@ -40,7 +41,7 @@ const updateNote = ({ title, text }) => {
         title,
         text,
     };
-    notes.value = [updateNote, ...notes.value.filter(note => note.id !== noteToChange.value.id)];
+    noteList.value.notes = [updateNote, ...noteList.value.notes.filter(note => note.id !== noteToChange.value.id)];
     
     noteToChange.value = null;
     setIsOverlayFalse();
@@ -57,9 +58,12 @@ const handleUpdateNote = (note) => {
 };
 
 const deleteNote = (noteToDelete) =>
-    notes.value = notes.value.filter(note => note.id !== noteToDelete.id);
+    noteList.value.notes = noteList.value.notes.filter(note => note.id !== noteToDelete.id);
 
 const openOverlay = () => setIsOverlayTrue();
+
+provide('handleUpdateNote', handleUpdateNote);
+provide('deleteNote', deleteNote);
 </script>
 
 <template>
@@ -72,25 +76,10 @@ const openOverlay = () => setIsOverlayTrue();
         />
     </Overlay>
 
-    <FlexJustifyBetween class="mb-4">
-        <h1 class="display-1">Meine Notizen </h1>
-        <span @click="openOverlay()" class="bg-info text-dark text-center fs-1 my-auto d-flex justify-content-center rounded-circle circle" role="button">+</span>
-    </FlexJustifyBetween>
+    <NotesHeader :noteList="noteList" @openOverlay="openOverlay"/>
 
-    <GridWrapper>
-        <Note 
-            v-for="note in notes" 
-            :key="note.id + getTimestampFull()" 
-            :note="note"
-            @handleUpdateNote="handleUpdateNote"
-            @deleteNote="deleteNote"
-        />        
-    </GridWrapper>
+    <NotesMain :noteList="noteList" />
+
+    <NotesFooter :noteList="noteList" />
+
 </template>
-
-<style scoped>
-.circle {
-    width: 65px;
-    height: 65px;
-}
-</style>
