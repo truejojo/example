@@ -8,10 +8,10 @@ import Button from '../../components/single/Button.vue';
 import ErrorMessage from '../../components/single/ErrorMessage.vue';
 import FlexJustifyBetween from '../../wrapper/FlexJustifyBetween.vue';
 
-const noteList = useNoteStore();
+const notesStore = useNoteStore();
 
-const title = ref( noteList.currentNote ? noteList.currentNote.title : '');
-const text = ref( noteList.currentNote ? noteList.currentNote.text : '');
+const title = ref( notesStore.currentNote ? notesStore.currentNote.title : '');
+const text = ref( notesStore.currentNote ? notesStore.currentNote.text : '');
 const titleErrorMessage = ref('');
 const textErrorMessage = ref('');
 
@@ -22,13 +22,13 @@ const addNote = () => {
     if(title.value === '') return titleErrorMessage.value = "Bitte einen Titel eingeben!";
     if(text.value === '') return textErrorMessage.value = "Bitte einen Text eingeben!";
 
-    noteList.addNote({ title: title.value, text: text.value });
-    noteList.setIsOverlay(false);
+    notesStore.addNote({ title: title.value, text: text.value });
+    notesStore.setIsOverlay(false);
 };
 
 const cancelNewNote = () => {
-    noteList.setCurrentNote(null);
-    noteList.setIsOverlay(false);
+    notesStore.setCurrentNote(null);
+    notesStore.setIsOverlay(false);
 };
 
 const updateNote = () => {
@@ -37,9 +37,9 @@ const updateNote = () => {
     if(title.value === '') return titleErrorMessage.value = "Bitte einen Titel eingeben!";
     if(text.value === '') return textErrorMessage.value = "Bitte einen Text eingeben!";
 
-    noteList.updateNote({ title: title.value, text: text.value });
-    noteList.setCurrentNote(null);
-    noteList.setIsOverlay(false);
+    notesStore.updateNote({ title: title.value, text: text.value });
+    notesStore.setCurrentNote(null);
+    notesStore.setIsOverlay(false);
 };
 </script>
 
@@ -55,8 +55,8 @@ const updateNote = () => {
         <ErrorMessage v-if="textErrorMessage">{{ textErrorMessage }}</ErrorMessage>
     </div>
     <FlexJustifyBetween>
-        <Button :onClick="noteList.currentNote ? updateNote : addNote">
-            {{ noteList.currentNote ? 'Notiz ändern' : 'Neue Notiz' }}
+        <Button :onClick="notesStore.currentNote ? updateNote : addNote">
+            {{ notesStore.currentNote ? 'Notiz ändern' : 'Neue Notiz' }}
         </Button>
         <Button :onClick="cancelNewNote" bgColor="btn-secondary">Abbrechen</Button>
     </FlexJustifyBetween>

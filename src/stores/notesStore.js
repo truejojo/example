@@ -7,9 +7,11 @@ const { getNumbersIdent } = useRandomCharacter();
 
 const useNotesStore = defineStore('noteList', {
     state: () => ({
-        name: '',
-        maxNotes: 0,
-        notes: [], 
+        data: {
+            name: '',
+            maxNotes: 0,
+            notes: [], 
+        },
         isOverlay: false,
         currentNote: null,
     }),
@@ -17,11 +19,11 @@ const useNotesStore = defineStore('noteList', {
     actions: {
         async seed () {
             const response = await import('../data/notes.json');
-            this.$state = response.default;
+            this.$state= response.default;
         },
 
         addNote ({ title, text }) {
-            this.$state.notes.push({
+            this.$state.data.notes.push({
                 id: getNumbersIdent(),
                 date: getShortDate(),
                 dateTS: getTimestampDate(),
@@ -33,17 +35,18 @@ const useNotesStore = defineStore('noteList', {
         },
 
         deleteNote (noteToDelete) {
-            this.$state.notes = this.$state.notes.filter(note => note.id !== noteToDelete.id);
+            this.$state.data.notes = this.$state.data.notes.filter(note => note.id !== noteToDelete.id);
         },
 
         updateNote ({ title, text }) {
-            const newNoteValues = { 
+            const noteUpdated = { 
                 ...this.$state.currentNote, 
                 changeTS: getTimestampFull(),
                 title,
                 text,
             };
-            this.$state.notes = [newNoteValues, ...this.$state.notes.filter(note => note.id !== this.$state.currentNote.id)];
+            this.$state.data.notes = this.$state.data.notes.map(note => 
+                note.id === this.$state.currentNote.id ? noteUpdated : note);
         },
 
         setCurrentNote(newNote) {
@@ -57,7 +60,7 @@ const useNotesStore = defineStore('noteList', {
     
     getters: {
         getRemainingNotes() {
-            return this.$state.maxNotes - this.$state.notes.length;
+            return this.$state.data.maxNotes - this.$state.data.notes.length;
         },
     }
     });

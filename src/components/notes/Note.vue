@@ -9,14 +9,14 @@ const { note } = defineProps({
     }
 });
 const { title, text, date } = note;
-const noteList = useNoteStore();
+const notesStore = useNoteStore();
 
 const handleUpdateNote = () => {
-    noteList.setCurrentNote(note);
-    noteList.setIsOverlay(true);
+    notesStore.setCurrentNote(note);
+    notesStore.setIsOverlay(true);
 }
 
-const deleteNote = () => noteList.deleteNote(note);
+const deleteNote = () => notesStore.deleteNote(note);
 </script>
 
 <template>

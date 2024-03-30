@@ -6,15 +6,15 @@ import useDate from '../../composables/useDate.js';
 
 const { getTimestampFull } = useDate();
 
-const noteList = useNoteStore();
+const notesStore = useNoteStore();
 </script>
 
 <template>
     <GridWrapper>
-        <Note 
-            v-for="note in noteList.notes" 
-            :key="note.id + getTimestampFull()" 
+        <Note
+            v-for="note in notesStore.data.notes"
+            :key="note.id + getTimestampFull()"
             :note="note"
-        />        
+            />        
     </GridWrapper>
 </template>
