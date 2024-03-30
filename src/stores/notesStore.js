@@ -1,9 +1,17 @@
 import { defineStore } from 'pinia';
+import useIndexedDB from '../composables/useIndexedDB.js';
 import useDate from '../composables/useDate.js';
 import useRandomCharacter from '../composables/useRandomCharacter.js';
 
 const { getTimestampDate, getTimestampFull, getShortDate } = useDate();
 const { getNumbersIdent } = useRandomCharacter();
+const {
+    openDB,
+    addRecord,
+    updateRecord,
+    deleteRecord,
+    getRecords,
+} = useIndexedDB('notesDataDB', 'notesData');
 
 const useNotesStore = defineStore('noteList', {
     state: () => ({
@@ -18,12 +26,20 @@ const useNotesStore = defineStore('noteList', {
 
     actions: {
         async seed () {
-            const response = await import('../data/notes.json');
-            this.$state= response.default;
+            await openDB();
+            await this.getNotes();
+            this.$state.data.name = 'Meine Notizen';
+            this.$state.data.maxNotes = 30;
+            this.$state.isOverlay = false;
+            this.$state.currentNote = null;
         },
 
-        addNote ({ title, text }) {
-            this.$state.data.notes.push({
+        async getNotes() {
+            this.$state.data.notes = await getRecords();
+        },
+
+        async addNote ({ title, text }) {
+            addRecord({
                 id: getNumbersIdent(),
                 date: getShortDate(),
                 dateTS: getTimestampDate(),
@@ -32,21 +48,22 @@ const useNotesStore = defineStore('noteList', {
                 title,
                 text,
             });
+            await this.getNotes();
         },
 
-        deleteNote (noteToDelete) {
-            this.$state.data.notes = this.$state.data.notes.filter(note => note.id !== noteToDelete.id);
+        async deleteNote (noteToDelete) {
+            deleteRecord(noteToDelete.id);
+            await this.getNotes();
         },
 
-        updateNote ({ title, text }) {
-            const noteUpdated = { 
+        async updateNote ({ title, text }) {
+            updateRecord({
                 ...this.$state.currentNote, 
                 changeTS: getTimestampFull(),
                 title,
-                text,
-            };
-            this.$state.data.notes = this.$state.data.notes.map(note => 
-                note.id === this.$state.currentNote.id ? noteUpdated : note);
+                text,    
+            });
+            await this.getNotes();
         },
 
         setCurrentNote(newNote) {

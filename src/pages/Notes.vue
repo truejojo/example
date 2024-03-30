@@ -17,7 +17,13 @@ notesStore.seed();
 
     <NotesHeader/>
 
-    <NotesMain />
+    <NotesMain v-if="notesStore.data.notes.length > 0" />
+        <div v-else class="text-center">
+            <p>
+                Zur Zeit sind keine Notizen hinterlegt!<br />
+                <small>Fang am Besten gleich an...</small>
+            </p>
+        </div>
 
     <NotesFooter />
 
