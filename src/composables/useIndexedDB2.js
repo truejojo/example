@@ -121,13 +121,11 @@ function showNote(noteID) {
 	let notesData = makeTransaction("notesData", "readonly");
 	let request = notesData.notes.get(noteID);
 	request.addEventListener("success", (event) => {
-        // TODO vue code here
-
-		// let data = event.target.result;
-		// document.querySelector("#myForm").setAttribute("data-key", data.id);
-		// document.querySelector("#noteTitle").value = data.title;
-		// document.querySelector("#notePerson").value = data.person;
-		// document.querySelector("#noteMessage").value = data.message;
+		let data = event.target.result;
+		document.querySelector("#myForm").setAttribute("data-key", data.id);
+		document.querySelector("#noteTitle").value = data.title;
+		document.querySelector("#notePerson").value = data.person;
+		document.querySelector("#noteMessage").value = data.message;
 	});
 	request.addEventListener("error", (event) => {
 		console.log(event.target.error);

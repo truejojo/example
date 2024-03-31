@@ -1,3 +1,5 @@
+// https://medium.com/@bklik/handing-loading-flags-in-pinia-stores-bfdcee5b9fb
+
 import { defineStore } from 'pinia';
 import useIndexedDB from '../composables/useIndexedDB.js';
 import useDate from '../composables/useDate.js';
@@ -5,13 +7,20 @@ import useRandomCharacter from '../composables/useRandomCharacter.js';
 
 const { getTimestampDate, getTimestampFull, getShortDate } = useDate();
 const { getNumbersIdent } = useRandomCharacter();
+
+const DB_NAME = 'notesDataDB';
+const DB_STORE_NAME = 'notesData';
+const DB_VERSION = 3;
+const DB_INDEXES = ['title', 'date', 'changeTS'];
 const {
     openDB,
     addRecord,
     updateRecord,
     deleteRecord,
     getRecords,
-} = useIndexedDB('notesDataDB', 'notesData');
+    getRecord,
+    closeDB,
+} = useIndexedDB(DB_NAME, DB_STORE_NAME);
 
 const useNotesStore = defineStore('noteList', {
     state: () => ({
@@ -20,22 +29,36 @@ const useNotesStore = defineStore('noteList', {
             maxNotes: 0,
             notes: [], 
         },
-        isOverlay: false,
         currentNote: null,
+        isOverlay: false,
+        loadTasks: [],
     }),
 
     actions: {
         async seed () {
-            await openDB();
-            await this.getNotes();
+            this.$state.loadTasks.push('seed');
+
+            await openDB(DB_VERSION, DB_INDEXES);
+            await this.setNotes();
+
             this.$state.data.name = 'Meine Notizen';
             this.$state.data.maxNotes = 30;
             this.$state.isOverlay = false;
             this.$state.currentNote = null;
+
+            setTimeout(() => {
+                this.$state.loadTasks = this.$state.loadTasks.filter(task => task !== 'seed');
+            }, 100);
+        },
+            
+        async setNotes() {
+            const records = await getRecords();
+            this.$state.data.notes = records ? records : [];
         },
 
-        async getNotes() {
-            this.$state.data.notes = await getRecords();
+        async getNote(id) {
+            const record = await getRecord(id);
+            return record ? record : null;
         },
 
         async addNote ({ title, text }) {
@@ -48,12 +71,12 @@ const useNotesStore = defineStore('noteList', {
                 title,
                 text,
             });
-            await this.getNotes();
+            await this.setNotes();
         },
 
         async deleteNote (noteToDelete) {
             deleteRecord(noteToDelete.id);
-            await this.getNotes();
+            await this.setNotes();
         },
 
         async updateNote ({ title, text }) {
@@ -63,7 +86,11 @@ const useNotesStore = defineStore('noteList', {
                 title,
                 text,    
             });
-            await this.getNotes();
+            await this.setNotes();
+        },
+
+        closingDB() {
+            closeDB();
         },
 
         setCurrentNote(newNote) {
@@ -76,10 +103,10 @@ const useNotesStore = defineStore('noteList', {
     },
     
     getters: {
-        getRemainingNotes() {
-            return this.$state.data.maxNotes - this.$state.data.notes.length;
-        },
+        loading: state => state.loadTasks.length > 0,
+
+        getRemainingNotes: state => state.data.maxNotes - state.data.notes.length,
     }
-    });
+});
 
 export default useNotesStore;
