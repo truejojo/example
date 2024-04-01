@@ -4,6 +4,8 @@
   import { useAuthorStore } from '../stores/authorStore'
   import { usePostStore } from '../stores/postStore'
   import Post from '../components/posts/Post.vue'
+  import InfoBox from '../components/single/InfoBox.vue';
+  import Spinner from '../components/single/Spinner.vue';
 
   const route = useRoute() 
   const { getPostAuthor } = storeToRefs(useAuthorStore())
@@ -16,11 +18,14 @@
 </script>
 
 <template>
-  <div>
-    <p v-if="loading">Loading post...</p>
-    <p v-if="error">{{ error.message }}</p>
-    <p v-if="post">
+  <InfoBox v-if="loading">
+    <Spinner />
+  </InfoBox>
+  <InfoBox v-if="error">
+    {{ error.message }}
+  </InfoBox>
+
+    <template v-if="post">
       <Post :post="post" :author="getPostAuthor"></Post>
-    </p>
-  </div> 
+    </template>
 </template>

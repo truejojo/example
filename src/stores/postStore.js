@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-const URL = 'https://jsonplaceholder.typicode.com/posts';
+const URL = 'https://jsonplaceholder.typicode.com';
 
 export const usePostStore = defineStore({
   id: 'post',
@@ -24,7 +24,7 @@ export const usePostStore = defineStore({
       this.loading = true
 
       try {
-        const response = await fetch(`${URL}`);
+        const response = await fetch(`${URL}/posts`);
         this.posts = await response.json();
       } catch (error) {
         this.error = error;
@@ -38,7 +38,7 @@ export const usePostStore = defineStore({
       this.loading = true
 
       try {
-        const response = await fetch(`${URL}/${id}`)
+        const response = await fetch(`${URL}/posts/${id}`)
         this.post = await response.json();        
       } catch (error) {
         this.error = error

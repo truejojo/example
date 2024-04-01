@@ -1,11 +1,15 @@
 import { defineStore } from 'pinia';
 import { usePostStore } from './postStore.js';
 
+const URL = 'https://jsonplaceholder.typicode.com';
+
 export const useAuthorStore = defineStore({
   id: 'author',
 
   state: () => ({
     authors: [],
+    loading: false,
+    error: null,
   }),
 
   getters: {
@@ -17,8 +21,17 @@ export const useAuthorStore = defineStore({
 
   actions: {
     async fetchAuthors() {
-      const response = await fetch('https://jsonplaceholder.typicode.com/users');
-      this.authors = await response.json();
+      this.authors = [];
+      this.loading = true;
+
+      try {
+        const response = await fetch(`${URL}/users`);
+        this.authors = await response.json();
+      } catch (error) {
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
     }
   }
 });

@@ -5,9 +5,11 @@
   import { useAuthorStore } from '../stores/authorStore'
   import { usePostStore } from '../stores/postStore'
   import Author from '../components/posts/Author.vue'
+  import InfoBox from '../components/single/InfoBox.vue';
+  import Spinner from '../components/single/Spinner.vue';
 
   const route = useRoute() 
-  const { authors } = storeToRefs(useAuthorStore())
+  const { authors, loading, error } = storeToRefs(useAuthorStore())
   const { getPostsPerAuthor } = storeToRefs(usePostStore())
   const { fetchPosts } = usePostStore()
 
@@ -19,11 +21,17 @@
 </script>
 
 <template>
-  <div>
+  <InfoBox v-if="loading">
+      <Spinner />
+    </InfoBox>
+    <InfoBox v-if="error">
+      {{ error.message }}
+    </InfoBox>
+
     <author 
-        :author="getAuthorByUserName" 
-        :posts="getPostsPerAuthor(getAuthorByUserName.id)"
+      v-if="getAuthorByUserName"
+      :author="getAuthorByUserName" 
+      :posts="getPostsPerAuthor(getAuthorByUserName.id)"
     >
     </author>
-  </div> 
 </template>

@@ -13,16 +13,21 @@
 </script>
 
 <template>
-  <div>
-    <div>
-      <h2>{{ post.title }}</h2>
-      <p v-if="author">Written by: <RouterLink :to="`/author/${author.username}`">{{ author.name }}</RouterLink>
-        | <span>Comments: {{ getPostComments.length }}</span>
-      </p>
-      <p>{{ post.body }}</p>
+    <header class="mb-4 bg-dark text-white px-5 py-3">
+        <h1 class="display-4 me-3 text-danger">{{ post.title }}</h1>
+        <p v-if="author" class="">
+          Written by: 
+          <RouterLink :to="`/author/${author.username}`" class="text-decoration-none text-info">
+            {{ author.name }}
+          </RouterLink>
+          | Comments: <span class="badge bg-warning text-dark">{{ getPostComments.length }}</span>
+        </p>
+        <p class="fs-4">{{ post.body }}</p>
+    </header>
+    <div class="comments">
+      <header class="mb-3 bg-dark text-white px-5 py-3">
+        <h2>Comments:</h2>
+      </header>
+      <comment :comments="getPostComments"></comment>
     </div>
-    <hr>
-    <h3>Comments:</h3>
-    <comment :comments="getPostComments"></comment>
-  </div>
 </template>
