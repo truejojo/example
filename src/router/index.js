@@ -13,6 +13,26 @@ const routes = [
     redirect: "/",
   },
   {
+    path: "/posts",
+    name: "posts",
+    component: () => import("../pages/Posts.vue"),
+  },
+  {
+    path: "/post/:id",
+    name: "post",
+    component: () => import("../pages/Post.vue"),
+  },
+  {
+    path: "/authors",
+    name: "authors",
+    component: () => import("../pages/Authors.vue"),
+  },
+  {
+    path: "/author/:username",
+    name: "author",
+    component: () => import("../pages/Author.vue"),
+  },
+  {
     path: "/composables",
     name: "composables",
     component: () => import("../pages/Composables.vue"),

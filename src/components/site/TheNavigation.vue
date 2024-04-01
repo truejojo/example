@@ -20,7 +20,10 @@ import Container from '../../wrapper/Container.vue';
             <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <RouterLink class="nav-link text-light text-uppercase" aria-current="page" :to="{name: 'home'}">Home</RouterLink>
+                    <RouterLink class="nav-link text-light text-uppercase" :to="{name: 'posts'}">Posts</RouterLink>
+                </li>
+                <li class="nav-item">
+                    <RouterLink class="nav-link text-light text-uppercase" :to="{name: 'authors'}">Authors</RouterLink>
                 </li>
                 <li class="nav-item">
                     <RouterLink class="nav-link text-light text-uppercase" :to="{name: 'composables'}">Composables</RouterLink>

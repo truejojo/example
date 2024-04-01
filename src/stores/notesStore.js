@@ -1,5 +1,3 @@
-// https://medium.com/@bklik/handing-loading-flags-in-pinia-stores-bfdcee5b9fb
-
 import { defineStore } from 'pinia';
 import useIndexedDB from '../composables/useIndexedDB.js';
 import useDate from '../composables/useDate.js';
