@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref } from 'vue';
 
 const useToggler = (initialValue = false) => {
   const value = ref(initialValue);
@@ -15,7 +15,14 @@ const useToggler = (initialValue = false) => {
 
   const resetToggle = () => (value.value = initialValue);
 
-  return [ getToggle, toggle, setToggleTrue, setToggleFalse, setToggle, resetToggle ];
+  return [
+    getToggle,
+    toggle,
+    setToggleTrue,
+    setToggleFalse,
+    setToggle,
+    resetToggle,
+  ];
 };
 
 export default useToggler;

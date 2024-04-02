@@ -15,8 +15,10 @@ export const useAuthorStore = defineStore({
   getters: {
     getPostAuthor: (state) => {
       const postStore = usePostStore();
-      return state.authors.find((author) => author.id === postStore.post.userId);
-    }
+      return state.authors.find(
+        (author) => author.id === postStore.post.userId
+      );
+    },
   },
 
   actions: {
@@ -32,6 +34,6 @@ export const useAuthorStore = defineStore({
       } finally {
         this.loading = false;
       }
-    }
-  }
+    },
+  },
 });

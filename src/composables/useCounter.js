@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref } from 'vue';
 
 const useCounter = (startCount = 0, counter = 1) => {
   const count = ref(startCount);
@@ -13,7 +13,7 @@ const useCounter = (startCount = 0, counter = 1) => {
 
   const getCount = () => count.value;
 
-  return [ getCount, incrementCount, decrementCount, resetCount, setCount ];
+  return [getCount, incrementCount, decrementCount, resetCount, setCount];
 };
 
 export default useCounter;

@@ -9,19 +9,20 @@ export const usePostStore = defineStore({
     posts: [],
     post: null,
     loading: false,
-    error: null
+    error: null,
   }),
 
   getters: {
     getPostsPerAuthor: (state) => {
-      return (authorId) => state.posts.filter((post) => post.userId === authorId)
-    }
-  }, 
+      return (authorId) =>
+        state.posts.filter((post) => post.userId === authorId);
+    },
+  },
 
   actions: {
     async fetchPosts() {
-      this.posts = []
-      this.loading = true
+      this.posts = [];
+      this.loading = true;
 
       try {
         const response = await fetch(`${URL}/posts`);
@@ -34,17 +35,17 @@ export const usePostStore = defineStore({
     },
 
     async fetchPost(id) {
-      this.post = null
-      this.loading = true
+      this.post = null;
+      this.loading = true;
 
       try {
-        const response = await fetch(`${URL}/posts/${id}`)
-        this.post = await response.json();        
+        const response = await fetch(`${URL}/posts/${id}`);
+        this.post = await response.json();
       } catch (error) {
-        this.error = error
+        this.error = error;
       } finally {
-        this.loading = false
+        this.loading = false;
       }
-    }
-  }
+    },
+  },
 });

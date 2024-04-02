@@ -14,38 +14,37 @@ const { seed, closingDB } = useNoteStore();
 const { loading, error, isOverlay, notes } = storeToRefs(useNoteStore());
 
 onMounted(async () => {
-    await seed();
+  await seed();
 });
 
 onBeforeUnmount(() => {
-    closingDB();
+  closingDB();
 });
 </script>
 
-<template>    
-    <InfoBox v-if="loading">
-        <Spinner />
-    </InfoBox>
-    <InfoBox v-if="error">
-        {{ error.message }}
-    </InfoBox>
-    
-    <template v-if="notes">
-        <Overlay v-if="isOverlay">
-            <NoteForm />
-        </Overlay>
-        
-        <NotesHeader/>
+<template>
+  <InfoBox v-if="loading">
+    <Spinner />
+  </InfoBox>
+  <InfoBox v-if="error">
+    {{ error.message }}
+  </InfoBox>
 
-        <NotesMain v-if="notes.length > 0" />
-        <InfoBox v-else>
-            <p class="text-center m-0">
-                Zur Zeit sind keine Notizen hinterlegt!<br />
-                <small>Fang am Besten gleich an...</small>
-            </p>
-        </InfoBox>
-        
-        <NotesFooter />
-    </template>
+  <template v-if="notes">
+    <Overlay v-if="isOverlay">
+      <NoteForm />
+    </Overlay>
 
+    <NotesHeader />
+
+    <NotesMain v-if="notes.length > 0" />
+    <InfoBox v-else>
+      <p class="text-center m-0">
+        Zur Zeit sind keine Notizen hinterlegt!<br />
+        <small>Fang am Besten gleich an...</small>
+      </p>
+    </InfoBox>
+
+    <NotesFooter />
+  </template>
 </template>

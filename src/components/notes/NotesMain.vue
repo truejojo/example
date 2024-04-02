@@ -11,11 +11,11 @@ const { notes } = storeToRefs(useNoteStore());
 </script>
 
 <template>
-    <GridWrapper>
-        <Note
-            v-for="note in notes"
-            :key="note.id + getTimestampFull()"
-            :note="note"
-            />        
-    </GridWrapper>
+  <GridWrapper>
+    <Note
+      v-for="note in notes"
+      :key="note.id + getTimestampFull()"
+      :note="note"
+    />
+  </GridWrapper>
 </template>

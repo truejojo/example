@@ -1,31 +1,39 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
-import Button from "../components/single/Button.vue";
-import useCounter from "../composables/useCounter.js";
-import useToggler from "../composables/useToggler.js";
-import useDate from "../composables/useDate.js";
+import { ref, computed, onMounted } from 'vue';
+import Button from '../components/single/Button.vue';
+import useCounter from '../composables/useCounter.js';
+import useToggler from '../composables/useToggler.js';
+import useDate from '../composables/useDate.js';
 import useRandomCharacter from '../composables/useRandomCharacter.js';
 
-const [ getCount, incrementCount, decrementCount, resetCount ] = useCounter();
-const [ getCount2, incrementCount2, decrementCount2, resetCount2 ] = useCounter(
+const [getCount, incrementCount, decrementCount, resetCount] = useCounter();
+const [getCount2, incrementCount2, decrementCount2, resetCount2] = useCounter(
   5,
   5
 );
-const [ getToggle, toggle, setToggleTrue, setToggleFalse ] = useToggler();
-const { getTimestampDate, getTimestampFull, getShortDate, getMediumDate, getLongDate, getFullDate } = useDate();
-const { getNumbersIdent, getLettersIdent, getCharactersIdent } = useRandomCharacter();
+const [getToggle, toggle, setToggleTrue, setToggleFalse] = useToggler();
+const {
+  getTimestampDate,
+  getTimestampFull,
+  getShortDate,
+  getMediumDate,
+  getLongDate,
+  getFullDate,
+} = useDate();
+const { getNumbersIdent, getLettersIdent, getCharactersIdent } =
+  useRandomCharacter();
 
-const textColor = computed(() => (getToggle() ? "red" : "blue"));
+const textColor = computed(() => (getToggle() ? 'red' : 'blue'));
 
-  const numbers = ref('');
-  const letters = ref('');
-  const chars = ref('');
-  
-  onMounted(() => {
-    numbers.value = getNumbersIdent();
-    letters.value = getLettersIdent();
-    chars.value = getCharactersIdent(20);
-  });
+const numbers = ref('');
+const letters = ref('');
+const chars = ref('');
+
+onMounted(() => {
+  numbers.value = getNumbersIdent();
+  letters.value = getLettersIdent();
+  chars.value = getCharactersIdent(20);
+});
 </script>
 
 <template>
