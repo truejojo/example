@@ -2,27 +2,27 @@ import { defineStore } from 'pinia';
 import { usePostStore } from './postStore.js';
 
 export const useCommentStore = defineStore({
-  id: 'comment',
+	id: 'comment',
 
-  state: () => ({
-    comments: [],
-  }),
+	state: () => ({
+		comments: [],
+	}),
 
-  getters: {
-    getPostComments: (state) => {
-      const postStore = usePostStore();
-      return state.comments.filter(
-        (comment) => comment.postId === postStore.post.id
-      );
-    },
-  },
+	getters: {
+		getPostComments: state => {
+			const postStore = usePostStore();
+			return state.comments.filter(
+				comment => comment.postId === postStore.post.id
+			);
+		},
+	},
 
-  actions: {
-    async fetchComments() {
-      const response = await fetch(
-        'https://jsonplaceholder.typicode.com/comments'
-      );
-      this.comments = await response.json();
-    },
-  },
+	actions: {
+		async fetchComments() {
+			const response = await fetch(
+				'https://jsonplaceholder.typicode.com/comments'
+			);
+			this.comments = await response.json();
+		},
+	},
 });
