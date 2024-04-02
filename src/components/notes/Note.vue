@@ -1,5 +1,5 @@
 <script setup>
-import useNoteStore from '../../stores/notesStore.js';
+import useNoteStore from '../../stores/noteStore.js';
 import Button from '../single/Button.vue';
 
 const { note } = defineProps({
@@ -9,14 +9,14 @@ const { note } = defineProps({
     }
 });
 const { title, text, date } = note;
-const notesStore = useNoteStore();
+const { setNoteToUpdate, setIsOverlay, deleteNote } = useNoteStore();
 
 const handleUpdateNote = () => {
-    notesStore.setCurrentNote(note);
-    notesStore.setIsOverlay(true);
+    setNoteToUpdate(note);
+    setIsOverlay(true);
 }
 
-const deleteNote = () => notesStore.deleteNote(note);
+const handleDeleteNote = () => deleteNote(note);
 </script>
 
 <template>
@@ -27,7 +27,7 @@ const deleteNote = () => notesStore.deleteNote(note);
         </div>
         <div class="card-footer d-flex align-items-end">
             <Button :onClick="handleUpdateNote" class="btn-sm me-2">Ändern</Button>
-            <Button :onClick="deleteNote" bgColor="btn-danger" class="btn-sm">Löschen</Button>    
+            <Button :onClick="handleDeleteNote" bgColor="btn-danger" class="btn-sm">Löschen</Button>    
             <span class="ms-auto badge bg-info text-dark">{{ date }}</span>
         </div>
     </div>

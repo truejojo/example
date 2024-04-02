@@ -16,5 +16,9 @@ Die Lösung soll so nah wie möglich an Best-Practice sein.
 Eine mögliche Lösung: // https://medium.com/@bklik/handing-loading-flags-in-pinia-stores-bfdcee5b9fb
 
 ## Bzgl. komplexes State management mit Pinia
+branch: 240401-tutorial-1
 Wird dieses Tutorial: https://blog.logrocket.com/complex-vue-3-state-management-pinia/
 durch gearbeitet und mit in die Demo Website eingebaut.
+
+Der Branch 240401-update-store wurde nicht in den main branch gemerget.
+Das updaten und angleichen der stores hat nicht so funktioniert wie gehofft.

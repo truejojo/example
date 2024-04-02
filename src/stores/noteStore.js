@@ -21,42 +21,58 @@ const {
 } = useIndexedDB(DB_NAME, DB_STORE_NAME);
 
 const useNotesStore = defineStore('noteList', {
+    id: 'note',
+
     state: () => ({
-        data: {
-            name: '',
-            maxNotes: 0,
-            notes: [], 
-        },
-        currentNote: null,
+        notes: [],
+        note: null,
+        maxNotes: 0,
+        noteToUpdate: null,
         isOverlay: false,
-        loadTasks: [],
+        loading: false,
+        error: null,
     }),
+
+    getters: {
+        getRemainingNotes: state => state.maxNotes - state.notes.length,
+    },
 
     actions: {
         async seed () {
-            this.$state.loadTasks.push('seed');
-
             await openDB(DB_VERSION, DB_INDEXES);
-            await this.setNotes();
+            await this.fetchNotes();
 
-            this.$state.data.name = 'Meine Notizen';
-            this.$state.data.maxNotes = 30;
-            this.$state.isOverlay = false;
-            this.$state.currentNote = null;
-
-            setTimeout(() => {
-                this.$state.loadTasks = this.$state.loadTasks.filter(task => task !== 'seed');
-            }, 100);
-        },
-            
-        async setNotes() {
-            const records = await getRecords();
-            this.$state.data.notes = records ? records : [];
+            this.maxNotes = 30;
+            this.isOverlay = false;
+            this.noteToUpdate = null;
         },
 
-        async getNote(id) {
-            const record = await getRecord(id);
-            return record ? record : null;
+        async fetchNotes() {
+            this.notes = [];
+            this.loading = true;
+
+            try {
+                const records = await getRecords();
+                this.notes = records ? records : [];
+            } catch (error) {
+                this.error = error;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async fetchNote(id) {
+            this.note = null;
+            this.loading = true;
+
+            try {
+                const record = await getRecord(id);
+                this.note = record ? record : null;
+            } catch (error) {
+                this.error = error;
+            } finally {
+                this.loading = false;
+            }
         },
 
         async addNote ({ title, text }) {
@@ -69,41 +85,36 @@ const useNotesStore = defineStore('noteList', {
                 title,
                 text,
             });
-            await this.setNotes();
+            await this.fetchNotes();
         },
 
         async deleteNote (noteToDelete) {
             deleteRecord(noteToDelete.id);
-            await this.setNotes();
+            await this.fetchNotes();
         },
 
         async updateNote ({ title, text }) {
             updateRecord({
-                ...this.$state.currentNote, 
+                ...this.noteToUpdate,
                 changeTS: getTimestampFull(),
                 title,
-                text,    
+                text,
             });
-            await this.setNotes();
+            this.noteToUpdate = null;
+            await this.fetchNotes();
         },
 
         closingDB() {
             closeDB();
         },
 
-        setCurrentNote(newNote) {
-            this.$state.currentNote = newNote;
+        setNoteToUpdate(updateValues) {
+            this.noteToUpdate = updateValues;
         },
 
         setIsOverlay(value) {
-            this.$state.isOverlay = value;
+            this.isOverlay = value;
         },
-    },
-    
-    getters: {
-        loading: state => state.loadTasks.length > 0,
-
-        getRemainingNotes: state => state.data.maxNotes - state.data.notes.length,
     }
 });
 

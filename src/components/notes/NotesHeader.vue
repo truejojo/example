@@ -1,17 +1,18 @@
 <script setup>
-import useNoteStore from '../../stores/notesStore.js';
-const notesStore = useNoteStore();
+import { storeToRefs } from 'pinia';
+import useNoteStore from '../../stores/noteStore.js';
 
-const handleIsOverlay = () => notesStore.setIsOverlay(true);
+const { setIsOverlay } = useNoteStore();
+const { getRemainingNotes } = storeToRefs(useNoteStore());
+
+const handleIsOverlay = () => setIsOverlay(true);
 </script>
 
 <template>
     <header class="mb-4 d-flex position-relative">
-        <h1 class="display-1 me-3">
-            {{ notesStore.data.name }} 
-        </h1>
+        <h1 class="display-1 me-3">Meine Notizen</h1>
         <span class="text-danger badge bg-dark text-center align-self-baseline fs-5">
-            {{ notesStore.getRemainingNotes }}
+            {{ getRemainingNotes }}
         </span>
         <div @click="handleIsOverlay" class="ms-auto bg-info text-dark text-center fs-1 my-auto d-flex justify-content-center rounded-circle circle" role="button">+</div>
     </header>

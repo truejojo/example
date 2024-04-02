@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import useNoteStore from '../../stores/notesStore.js';
+import useNoteStore from '../../stores/noteStore.js';
 import Label from '../../components/single/Label.vue';
 import InputTextField from '../../components/single/InputTextField.vue';
 import TextareaField from '../../components/single/TextareaField.vue';
@@ -8,38 +8,38 @@ import Button from '../../components/single/Button.vue';
 import ErrorMessage from '../../components/single/ErrorMessage.vue';
 import FlexJustifyBetween from '../../wrapper/FlexJustifyBetween.vue';
 
-const notesStore = useNoteStore();
+const { noteToUpdate, setNoteToUpdate, setIsOverlay, addNote, updateNote } = useNoteStore();
 
-const title = ref( notesStore.currentNote ? notesStore.currentNote.title : '');
-const text = ref( notesStore.currentNote ? notesStore.currentNote.text : '');
+const title = ref( noteToUpdate ? noteToUpdate.title : '');
+const text = ref( noteToUpdate ? noteToUpdate.text : '');
 const titleErrorMessage = ref('');
 const textErrorMessage = ref('');
 
 
-const addNote = () => {
+const handleAddNote = () => {
     titleErrorMessage.value = '';
     textErrorMessage.value = '';
     if(title.value === '') return titleErrorMessage.value = "Bitte einen Titel eingeben!";
     if(text.value === '') return textErrorMessage.value = "Bitte einen Text eingeben!";
 
-    notesStore.addNote({ title: title.value, text: text.value });
-    notesStore.setIsOverlay(false);
+    addNote({ title: title.value, text: text.value });
+    setIsOverlay(false);
 };
 
 const cancelNewNote = () => {
-    notesStore.setCurrentNote(null);
-    notesStore.setIsOverlay(false);
+    setNoteToUpdate(null);
+    setIsOverlay(false);
 };
 
-const updateNote = () => {
+const handleUpdateNote = () => {
     titleErrorMessage.value = '';
     textErrorMessage.value = '';
     if(title.value === '') return titleErrorMessage.value = "Bitte einen Titel eingeben!";
     if(text.value === '') return textErrorMessage.value = "Bitte einen Text eingeben!";
 
-    notesStore.updateNote({ title: title.value, text: text.value });
-    notesStore.setCurrentNote(null);
-    notesStore.setIsOverlay(false);
+    updateNote({ title: title.value, text: text.value });
+    setNoteToUpdate(null);
+    setIsOverlay(false);
 };
 </script>
 
@@ -55,8 +55,8 @@ const updateNote = () => {
         <ErrorMessage v-if="textErrorMessage">{{ textErrorMessage }}</ErrorMessage>
     </div>
     <FlexJustifyBetween>
-        <Button :onClick="notesStore.currentNote ? updateNote : addNote">
-            {{ notesStore.currentNote ? 'Notiz ändern' : 'Neue Notiz' }}
+        <Button :onClick="noteToUpdate ? handleUpdateNote : handleAddNote">
+            {{ noteToUpdate ? 'Notiz ändern' : 'Neue Notiz' }}
         </Button>
         <Button :onClick="cancelNewNote" bgColor="btn-secondary">Abbrechen</Button>
     </FlexJustifyBetween>
