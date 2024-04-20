@@ -1,0 +1,60 @@
+{
+	"name": "Example - Demo Web App",
+	"short_name": "Example",
+	"start_url": "./",
+	"id": "./",
+	"scope": "./",
+	"display": "standalone",
+	"background_color": "#76B900",
+	"description": "Eine Example Seite",
+	"lang": "de-DE",
+	"dir": "ltr",
+	"orientation": "portrait-primary",
+	"theme_color": "#76B900",
+	"screenshots": [
+		{
+			"src": "images/mexico-1280x960.png",
+			"type": "image/png",
+			"sizes": "1280x960",
+			"form_factor": "wide"
+		},
+		{
+			"src": "images/beach-640x427.png",
+			"type": "image/png",
+			"sizes": "640x427",
+			"form_factor": "narrow"
+		}
+	],
+	"icons": [
+		{
+			"src": "/src/assets/icons/apple-icon-57x57.png",
+			"type": "image/png",
+			"sizes": "57x57"
+		},
+		{
+			"src": "/src/assets/icons/apple-icon-72x72.png",
+			"type": "image/png",
+			"sizes": "72x72"
+		},
+		{
+			"src": "/src/assets/icons/favicon-96x96.png",
+			"type": "image/png",
+			"sizes": "96x96"
+		},
+		{
+			"src": "/src/assets/icons/apple-icon-180x180.png",
+			"type": "image/png",
+			"sizes": "180x180"
+		},
+		{
+			"src": "/src/assets/icons/favicon-256x256.png",
+			"type": "image/png",
+			"sizes": "256x256"
+		},
+		{
+			"src": "/src/assets/icons/ms-icon-310x310.png",
+			"type": "image/png",
+			"sizes": "310x310"
+		}
+	]
+}
